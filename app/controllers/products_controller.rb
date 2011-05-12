@@ -1,8 +1,9 @@
 class ProductsController < ApplicationController
-  # GET /products
-  # GET /products.xml
+  # GET /users/1/products
+  # GET /users/1/products.xml
   def index
-    @products = Product.all
+    @user = User.find(params[:user_id])
+    @products = @user.products
 
     respond_to do |format|
       format.html # index.html.erb
@@ -10,10 +11,11 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/1
-  # GET /products/1.xml
+  # GET /users/1/products/1
+  # GET /users/1/products/1.xml
   def show
-    @product = Product.find(params[:id])
+    @user = User.find(params[:user_id])
+    @product = @user.products.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -21,10 +23,11 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/new
-  # GET /products/new.xml
+  # GET /users/1/products/new
+  # GET /users/1/products/new.xml
   def new
-    @product = Product.new
+    @user = User.find(params[:user_id])
+    @product = @user.products.build # not new, but build is provided automagically by ActiveRecord
 
     respond_to do |format|
       format.html # new.html.erb
@@ -32,19 +35,21 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/1/edit
+  # GET /users/1/products/1/edit
   def edit
-    @product = Product.find(params[:id])
+    @user = User.find(params[:user_id])
+    @product = @user.products.find(params[:id])
   end
 
-  # POST /products
-  # POST /products.xml
+  # POST /users/1/products
+  # POST /users/1/products.xml
   def create
-    @product = Product.new(params[:product])
+    @user = User.find(params[:user_id])
+    @product = @user.products.build(params[:product])
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to(@product, :notice => 'Product was successfully created.') }
+        format.html { redirect_to([@user, @product], :notice => 'Product was successfully created.') }
         format.xml  { render :xml => @product, :status => :created, :location => @product }
       else
         format.html { render :action => "new" }
@@ -53,14 +58,15 @@ class ProductsController < ApplicationController
     end
   end
 
-  # PUT /products/1
-  # PUT /products/1.xml
+  # PUT /users/1/products/1
+  # PUT /users/1/products/1.xml
   def update
-    @product = Product.find(params[:id])
+    @user = User.find(params[:user_id])
+    @product = @user.products.find(params[:id])
 
     respond_to do |format|
       if @product.update_attributes(params[:product])
-        format.html { redirect_to(@product, :notice => 'Product was successfully updated.') }
+        format.html { redirect_to([@user, @product], :notice => 'Product was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -69,14 +75,15 @@ class ProductsController < ApplicationController
     end
   end
 
-  # DELETE /products/1
-  # DELETE /products/1.xml
+  # DELETE /users/1/products/1
+  # DELETE /users/1/products/1.xml
   def destroy
-    @product = Product.find(params[:id])
+    @user = User.find(params[:user_id])
+    @product = @user.products.find(params[:id])
     @product.destroy
 
     respond_to do |format|
-      format.html { redirect_to(products_url) }
+      format.html { redirect_to(user_products_url) }
       format.xml  { head :ok }
     end
   end

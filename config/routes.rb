@@ -1,7 +1,8 @@
 TwoIonCanons::Application.routes.draw do
-  resources :products
 
-  resources :users
+  resources :users do
+    resources :products
+  end
 
   root :to => 'users#index'
 
